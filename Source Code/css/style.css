@@ -1,0 +1,186 @@
+/* Background */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: "Monocraft", monospace;
+    color: #fff;
+}
+
+body {
+    background-image: url('https://www.bing.com/th/id/OGC.0cffa04637bbc93f791aad16f6f4add4?pid=1.7&rurl=https%3a%2f%2fi.pinimg.com%2foriginals%2f46%2f9e%2f57%2f469e57cb6b2d66a5d470f2a8dd9c45fe.gif&ehk=irlSCYE%2bXRG5raCI7sZebFe%2fMXcsQ1CNzksnGFQlD%2fQ%3d');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar a.right {
+    margin-left: auto;
+}
+
+.navbar img {
+    height: 30px;
+    width: auto;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 250px;
+    position: relative;
+    z-index: 3;
+}
+
+/* Main Content */
+.content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 3;
+}
+
+.video-player,
+.instructions {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+}
+
+.video-player {
+    flex: 2;
+}
+
+.instructions {
+    flex: 1;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+/* Video Player */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+/* Keep your existing video controls styling */
+.video-controls {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Footer */
+.footer {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    z-index: 3;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    list-style: none;
+    margin-bottom: 15px;
+}
+
+.footer-links li {
+    padding: 0 10px;
+}
+
+.footer-links a {
+    color: inherit;
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+.footer-links a:hover {
+    opacity: 1;
+}
+
+.footer-text {
+    font-size: small;
+    color: purple;
+}
+
+.copyright {
+    font-size: 0.9em;
+    color: #aaa;
+    margin: 0;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+    }
+
+    .video-player,
+    .instructions {
+        width: 100%;
+    }
+}

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <script src="https://kit.fontawesome.com/a5cee7b02e.js"></script>
+    <style>
+        body {
+            font-family: "Monocraft", monospace;
+            background-image: url('https://www.bing.com/th/id/OGC.0cffa04637bbc93f791aad16f6f4add4?pid=1.7&rurl=https%3a%2f%2fi.pinimg.com%2foriginals%2f46%2f9e%2f57%2f469e57cb6b2d66a5d470f2a8dd9c45fe.gif&ehk=irlSCYE%2bXRG5raCI7sZebFe%2fMXcsQ1CNzksnGFQlD%2fQ%3d');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: purple;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .leaderboard-container {
+            border: 4px solid purple;
+            padding: 70px;
+            background-color: #000;
+            position: relative;
+            display: block;
+        }
+
+        .leaderboard-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .leaderboard-table th {
+            border-bottom: 2px solid purple;
+        }
+
+        .leaderboard-table tr:nth-child(even) {
+            background-color: rgba(212, 0, 255, 0.123);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar a.right {
+            margin-left: auto;
+        }
+
+        .navbar img {
+            height: 30px;
+            width: auto;
+        }
+
+        .footer {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            z-index: 3;
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .footer-links li {
+            padding: 0 10px;
+        }
+
+        .footer-links a {
+            color: inherit;
+            text-decoration: none;
+            opacity: 0.8;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .footer-text {
+            font-size: small;
+            color: purple;
+        }
+
+        .copyright {
+            font-size: 0.9em;
+            color: #aaa;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="game.html">Game</a>
+        <a href="how-to.html">How-To</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="signup.html" class="right">
+            <i class="fa-regular fa-user"></i>
+        </a>
+    </nav>
+    <div class="leaderboard-container">
+        <div class="leaderboard-title">TOP FIGHTERS</div>
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>RANK</th>
+                    <th>NAME</th>
+                    <th>WINS</th>
+                    <th>LOSSES</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+                <!-- Leaderboard entries will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        let leaderboardData = null;
+
+        // Function to populate the leaderboard
+        function populateLeaderboard() {
+            if (!leaderboardData) {
+                // Initialize with data from localStorage
+                const playerStats = JSON.parse(localStorage.getItem('playerStats')) || {};
+                leaderboardData = { leaderboard: [] };
+
+                Object.entries(playerStats).forEach(([username, stats]) => {
+                    leaderboardData.leaderboard.push({
+                        name: username,
+                        wins: stats.wins,
+                        losses: stats.losses,
+                        rank: 0
+                    });
+                });
+
+                // Sort and update ranks
+                leaderboardData.leaderboard.sort((a, b) => b.wins - a.wins || a.losses - b.losses);
+                leaderboardData.leaderboard.forEach((player, index) => {
+                    player.rank = index + 1;
+                });
+            }
+
+            const leaderboardBody = document.getElementById('leaderboardBody');
+            if (!leaderboardBody) return;
+
+            leaderboardBody.innerHTML = '';
+
+            leaderboardData.leaderboard.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.rank}</td>
+                    <td>${entry.name}</td>
+                    <td>${entry.wins}</td>
+                    <td>${entry.losses}</td>
+                `;
+                leaderboardBody.appendChild(row);
+            });
+        }
+
+        // Function to load initial leaderboard data
+        async function loadLeaderboard() {
+            try {
+                // Load existing stats from localStorage
+                const playerStats = JSON.parse(localStorage.getItem('playerStats')) || {};
+
+                // Initialize leaderboard with stored stats
+                leaderboardData = { leaderboard: [] };
+
+                Object.entries(playerStats).forEach(([username, stats]) => {
+                    leaderboardData.leaderboard.push({
+                        name: username,
+                        wins: stats.wins,
+                        losses: stats.losses,
+                        rank: 0
+                    });
+                });
+
+                // Sort and update ranks
+                leaderboardData.leaderboard.sort((a, b) => b.wins - a.wins || a.losses - b.losses);
+                leaderboardData.leaderboard.forEach((player, index) => {
+                    player.rank = index + 1;
+                });
+
+                populateLeaderboard();
+            } catch (error) {
+                console.error('Error loading leaderboard data:', error);
+            }
+        }
+
+        // Load the leaderboard when the page loads
+        document.addEventListener('DOMContentLoaded', loadLeaderboard);
+
+        // Function to retrieve user data
+        function getUserData() {
+            return {
+                email: localStorage.getItem('userEmail'),
+                username: localStorage.getItem('username')
+            };
+        }
+
+        // Function to check if user is logged in
+        function isLoggedIn() {
+            return !!localStorage.getItem('userEmail');
+        }
+
+        // Function to update UI based on login status
+        function updateUI() {
+            const navBar = document.querySelector('.navbar');
+            if (isLoggedIn()) {
+                const userData = getUserData();
+                navBar.innerHTML += `<span>Welcome, ${userData.username}</span>`;
+                // Replace "Sign Up" link with "Log Out"
+                const signUpLink = navBar.querySelector('a[href="signup.html"]');
+                if (signUpLink) {
+                    signUpLink.textContent = 'Log Out';
+                    signUpLink.href = '#';
+                    signUpLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        localStorage.removeItem('userEmail');
+                        localStorage.removeItem('username');
+                        window.location.reload();
+                    });
+                }
+            }
+        }
+
+        // Run updateUI when the page loads
+        window.addEventListener('load', updateUI);
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="how-to.html">How-To</a></li>
+            <li><a href="signup.html">Signup</a></li>
+            <li><a href="leaderboard.html">Leaderboard</a></li>
+            <li><a href="https://boulderbugle.com/contact-us-fso4o7ll">About</a></li>
+        </ul>
+        <p class="footer-text">Fight Ninja is a game developed by Yamin Rizwan</p>
+        <p class="copyright">Fight Ninja © 2024</p>
+    </footer>
+</body>
+
+</html>

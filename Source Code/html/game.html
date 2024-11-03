@@ -1,0 +1,139 @@
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 20px;
+            background-image: url('https://www.bing.com/th/id/OGC.0cffa04637bbc93f791aad16f6f4add4?pid=1.7&rurl=https%3a%2f%2fi.pinimg.com%2foriginals%2f46%2f9e%2f57%2f469e57cb6b2d66a5d470f2a8dd9c45fe.gif&ehk=irlSCYE%2bXRG5raCI7sZebFe%2fMXcsQ1CNzksnGFQlD%2fQ%3d');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 1024px;
+            /* Adjust based on your game's width */
+            position: relative;
+        }
+
+        .ui-container {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            padding: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .button {
+            border: none;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="game-container">
+        <div class="ui-container">
+            <!-- player health -->
+            <div
+                style="position: relative; width: 100%; display: flex; justify-content: flex-end; border-top: 4px solid white; border-left: 4px solid white; border-bottom: 4px solid white;">
+                <div style="background-color: red; height: 30px; width: 100%"></div>
+                <div id="playerHealth"
+                    style="position: absolute; background: #818cf8; top: 0; right: 0; bottom: 0; width: 100%;"></div>
+            </div>
+
+            <!-- timer -->
+            <div id="timer"
+                style="background-color: black; width: 100px; height: 50px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: white; border: 4px solid white;">
+                10</div>
+
+            <!-- enemy health -->
+            <div
+                style="position: relative; width: 100%; border-top: 4px solid white; border-bottom: 4px solid white; border-right: 4px solid white;">
+                <div style="background-color: red; height: 30px"></div>
+                <div id="enemyHealth"
+                    style="position: absolute; background: #818cf8; top: 0; right: 0; bottom: 0; left: 0;"></div>
+            </div>
+        </div>
+
+        <div id="displayText"
+            style="position: absolute; color: white; align-items: center; justify-content: center; top: 0; right: 0; bottom: 0; left: 0; display: none;">
+            Tie</div>
+
+        <canvas></canvas>
+
+    </div>
+    <div class="button">
+        <button id="home-button" class="game-button" onclick="document.location='index.html'">Home</button>
+        <button id="reset-button" class="game-button" onclick="document.location='game.html'">Reset</button>
+        <button id="leaderboard-button" class="game-button"
+            onclick="document.location='leaderboard.html'">Leaderboard</button>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
+        integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+        </script>
+    <script src="../js/game.js"></script>
+    <script>
+        // Function to retrieve user data
+        function getUserData() {
+            return {
+                email: localStorage.getItem('userEmail'),
+                username: localStorage.getItem('username')
+            };
+            }
+
+        // Function to check if user is logged in
+        function isLoggedIn() {
+            return !!localStorage.getItem('userEmail');
+        }
+
+        // Function to update UI based on login status
+        function updateUI() {
+            const navBar = document.querySelector('.navbar');
+            if (isLoggedIn()) {
+                const userData = getUserData();
+                navBar.innerHTML += `<span>Welcome, ${userData.username}</span>`;
+                // Replace "Sign Up" link with "Log Out"
+                const signUpLink = navBar.querySelector('a[href="signup.html"]');
+                if (signUpLink) {
+                    signUpLink.textContent = 'Log Out';
+                    signUpLink.href = '#';
+                    signUpLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                        localStorage.removeItem('userEmail');
+                        localStorage.removeItem('username');
+                        window.location.reload();
+                    });
+                    }
+            }
+        }
+
+        // Run updateUI when the page loads
+        window.addEventListener('load', updateUI);
+    </script>
+</body>
